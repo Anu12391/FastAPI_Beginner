@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import FastAPI
 
 print("🟢 RUNNING THE CORRECT main.py FILE")
@@ -44,7 +46,7 @@ def get_simple_data():
 
 
 @app.get('/queryblog')
-def query_blog_with_limit(published:bool,limit=20):
+def query_blog_with_limit(published:bool,limit=20,sort:Optional[str]=None):
     if published:
         return {'data': f'{limit} published blogs per api call'}
     else:
