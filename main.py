@@ -11,3 +11,7 @@ def index():
 @app.get('/about')
 def about():
     return {'data': {'page_name': 'About Page'}}
+
+@app.get('/blog/{blog_id}')
+def show(blog_id):
+    return {'data': blog_id}

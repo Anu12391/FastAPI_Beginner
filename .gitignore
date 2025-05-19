@@ -172,3 +172,6 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+fastapi-env
+.DS_Store
+__pycache__
