@@ -44,7 +44,7 @@ def get_simple_data():
 
 
 @app.get('/queryblog')
-def query_blog_with_limit(limit,published):
+def query_blog_with_limit(published:bool,limit=20):
     if published:
         return {'data': f'{limit} published blogs per api call'}
     else:
