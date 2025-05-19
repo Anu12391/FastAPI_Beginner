@@ -12,6 +12,12 @@ def index():
 def about():
     return {'data': {'page_name': 'About Page'}}
 
+
+@app.get('/blog/unpublished')
+def unpublished():
+    return {'data': 'unpublished'}
+
+
 @app.get('/blog/{blog_id}')
 def show(blog_id: int):
     return {'data': blog_id}
@@ -35,3 +41,8 @@ def comments(blog_id: int,comment_id:int):
 @app.get('/simpledata')
 def get_simple_data():
     return {'data': {'arrays':{'1','2'}}}
+
+
+@app.get('/queryblog')
+def query_blog_with_limit(limit):
+    return {'data': f'{limit} blogs per api call'}
