@@ -51,3 +51,7 @@ def query_blog_with_limit(published:bool,limit=20,sort:Optional[str]=None):
         return {'data': f'{limit} published blogs per api call'}
     else:
         return {'data': f'{limit} blogs per api call'}
+
+@app.post('/blogpost')
+def create_blog_post():
+    return {'data': 'Blog is created'}
