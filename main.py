@@ -71,4 +71,4 @@ class Blog(BaseModel):
 
 @app.post('/blogcreate')
 def create_blog_pydantic(request: Blog):
-    return {'data': 'Blog is created'}
+    return {'data': f'Blog is created {request.title}'}
