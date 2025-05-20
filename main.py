@@ -1,5 +1,6 @@
 from typing import Optional
 
+import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -72,3 +73,7 @@ class Blog(BaseModel):
 @app.post('/blogcreate')
 def create_blog_pydantic(request: Blog):
     return {'data': f'Blog is created {request.title}'}
+
+
+if __name__ == '__main__':
+    uvicorn.run(app,host='127.0.0.1', port=9000)
