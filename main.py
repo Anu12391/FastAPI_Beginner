@@ -1,6 +1,7 @@
 from typing import Optional
 
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 print("🟢 RUNNING THE CORRECT main.py FILE")
 
@@ -54,4 +55,12 @@ def query_blog_with_limit(published:bool,limit=20,sort:Optional[str]=None):
 
 @app.post('/blogpost')
 def create_blog_post():
+    return {'data': 'Blog is created'}
+
+
+class Blog(BaseModel):
+    pass
+
+@app.post('/blogcreate')
+def create_blog_pydantic(request:Blog):
     return {'data': 'Blog is created'}
