@@ -20,4 +20,8 @@ def get_db():
 
 @app.post('/blogschema')
 def create_blog(request: Blog, db: Session = Depends(get_db)):
-    return db
+    new_blog=models.Blog(title=request.title, body=request.body)
+    db.add(new_blog)
+    db.commit()
+    db.refresh(new_blog)
+    return new_blog
