@@ -1,13 +1,23 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
 
 from blog import models
-from blog.database import engine
+from blog.database import engine, SessionLocal
 from blog.schemas import Blog
 
 app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
 
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
 @app.post('/blogschema')
-def create_blog(request: Blog):
-    return request
+def create_blog(request: Blog, db: Session = Depends(get_db)):
+    return db
