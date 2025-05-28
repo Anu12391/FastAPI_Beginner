@@ -4,7 +4,7 @@ import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-print("🟢 RUNNING THE CORRECT blog.py FILE")
+print("🟢 RUNNING THE CORRECT main.py FILE")
 
 app = FastAPI()
 
