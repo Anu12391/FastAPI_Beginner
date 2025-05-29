@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, Response
+
 from sqlalchemy.orm import Session
 from starlette import status
 
@@ -34,7 +35,10 @@ def get_all_blog(db: Session = Depends(get_db)):
     return blogs
 
 
-@app.get('/blog/{id}')
-def get_blog_by_id(id: int, db: Session = Depends(get_db)):
+@app.get('/blog/{id}', status_code=200)
+def get_blog_by_id(id: int, response: Response, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id).first()
+    if not blog:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {'error_response': f'Blog with this {id} not found'}
     return blog
