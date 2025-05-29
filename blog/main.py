@@ -19,7 +19,7 @@ def get_db():
         db.close()
 
 
-@app.post('/blogschema', status_code=201)
+@app.post('/blogschema', status_code=status.HTTP_201_CREATED)
 def create_blog(request: Blog, db: Session = Depends(get_db)):
     new_blog = models.Blog(title=request.title, body=request.body)
     db.add(new_blog)
