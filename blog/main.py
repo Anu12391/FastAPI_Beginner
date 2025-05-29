@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
+from starlette import status
 
 from blog import models
 from blog.database import engine, SessionLocal
@@ -18,23 +19,22 @@ def get_db():
         db.close()
 
 
-@app.post('/blogschema')
+@app.post('/blogschema', status_code=201)
 def create_blog(request: Blog, db: Session = Depends(get_db)):
-    new_blog=models.Blog(title=request.title, body=request.body)
+    new_blog = models.Blog(title=request.title, body=request.body)
     db.add(new_blog)
     db.commit()
     db.refresh(new_blog)
     return new_blog
 
 
-
 @app.get('/blogall')
-def get_all_blog( db: Session = Depends(get_db)):
-    blogs=db.query(models.Blog).all()
+def get_all_blog(db: Session = Depends(get_db)):
+    blogs = db.query(models.Blog).all()
     return blogs
+
 
 @app.get('/blog/{id}')
 def get_blog_by_id(id: int, db: Session = Depends(get_db)):
-    blog=db.query(models.Blog).filter(models.Blog.id==id).first()
+    blog = db.query(models.Blog).filter(models.Blog.id == id).first()
     return blog
-
