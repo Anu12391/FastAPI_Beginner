@@ -5,7 +5,7 @@ from starlette import status
 
 from blog import models
 from blog.database import engine, SessionLocal
-from blog.schemas import Blog
+from blog.schemas import Blog, ShowBlog
 
 app = FastAPI()
 
@@ -35,7 +35,7 @@ def get_all_blog(db: Session = Depends(get_db)):
     return blogs
 
 
-@app.get('/blog/{id}', status_code=200)
+@app.get('/blog/{id}', status_code=200, response_model=ShowBlog)
 def get_blog_by_id(id: int, response: Response, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id).first()
     if not blog:
@@ -46,9 +46,8 @@ def get_blog_by_id(id: int, response: Response, db: Session = Depends(get_db)):
 
 
 @app.delete('/blog/{id}', status_code=status.HTTP_204_NO_CONTENT)
-
 def destroy(id, db: Session = Depends(get_db)):
-    blog= db.query(models.Blog).filter(models.Blog.id == id)
+    blog = db.query(models.Blog).filter(models.Blog.id == id)
     if not blog.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Blog with this {id} is not found")
     else:
