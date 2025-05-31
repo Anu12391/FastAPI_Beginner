@@ -6,7 +6,8 @@ class Blog(BaseModel):
     body: str
 
 
-class ShowBlog(Blog):
+class ShowBlog(BaseModel):
+    title: str
+
     class Config:
         orm_mode = True
-    
