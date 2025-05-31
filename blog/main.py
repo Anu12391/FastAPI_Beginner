@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import FastAPI, Depends, Response, HTTPException
 
 from sqlalchemy.orm import Session
@@ -29,7 +31,7 @@ def create_blog(request: Blog, db: Session = Depends(get_db)):
     return new_blog
 
 
-@app.get('/blogall')
+@app.get('/blogall', response_model=List[ShowBlog])
 def get_all_blog(db: Session = Depends(get_db)):
     blogs = db.query(models.Blog).all()
     return blogs
