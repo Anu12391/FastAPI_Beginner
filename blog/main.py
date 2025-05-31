@@ -50,3 +50,10 @@ def destroy(id, db: Session = Depends(get_db)):
     db.query(models.Blog).filter(models.Blog.id == id).delete(synchronize_session=False)
     db.commit()
     return 'done'
+
+
+@app.put('/blog/{id}', status_code=status.HTTP_202_ACCEPTED)
+def update(id, request: Blog, db: Session = Depends(get_db)):
+    db.query(models.Blog).filter(models.Blog.id == id).update({'title':request.title, 'body':request.body})
+    db.commit()
+    return 'updated'
