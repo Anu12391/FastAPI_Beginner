@@ -1,7 +1,4 @@
-
-
 from fastapi import FastAPI, Depends, Response, HTTPException
-
 
 from sqlalchemy.orm import Session
 from starlette import status
@@ -46,3 +43,10 @@ def get_blog_by_id(id: int, response: Response, db: Session = Depends(get_db)):
         # response.status_code = status.HTTP_404_NOT_FOUND
         # return {'error_response': f'Blog with this {id} not found'}
     return blog
+
+
+@app.delete('/blog/{id}', status_code=status.HTTP_204_NO_CONTENT)
+def destroy(id, db: Session = Depends(get_db)):
+    db.query(models.Blog).filter(models.Blog.id == id).delete(synchronize_session=False)
+    db.commit()
+    return 'done'
