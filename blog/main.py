@@ -1,13 +1,14 @@
 from typing import List
 
 from fastapi import FastAPI, Depends, Response, HTTPException
+from passlib.context import CryptContext
 
 from sqlalchemy.orm import Session
 from starlette import status
 
 from blog import models
 from blog.database import engine, SessionLocal
-from blog.schemas import Blog, ShowBlog
+from blog.schemas import Blog, ShowBlog, User
 
 app = FastAPI()
 
@@ -68,3 +69,16 @@ def update(id, request: Blog, db: Session = Depends(get_db)):
         blog.update({'title': request.title, 'body': request.body})
         db.commit()
         return 'updated'
+
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+@app.post('/createuser', status_code=status.HTTP_201_CREATED)
+def create_user(request: User, db: Session = Depends(get_db)):
+    hashed_password = pwd_context.hash(request.password)
+    new_user = models.User(name=request.name, email=request.email, password=hashed_password)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
