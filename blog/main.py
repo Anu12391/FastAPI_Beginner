@@ -8,6 +8,7 @@ from starlette import status
 
 from blog import models
 from blog.database import engine, SessionLocal
+from blog.hashing import Hash
 from blog.schemas import Blog, ShowBlog, User
 
 app = FastAPI()
@@ -71,12 +72,12 @@ def update(id, request: Blog, db: Session = Depends(get_db)):
         return 'updated'
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 
 @app.post('/createuser', status_code=status.HTTP_201_CREATED)
 def create_user(request: User, db: Session = Depends(get_db)):
-    hashed_password = pwd_context.hash(request.password)
+    hashed_password = Hash().bcrypt(request.password)
     new_user = models.User(name=request.name, email=request.email, password=hashed_password)
     db.add(new_user)
     db.commit()
