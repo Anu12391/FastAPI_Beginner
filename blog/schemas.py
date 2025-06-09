@@ -36,7 +36,7 @@ class ShowBlog(BaseModel):
 class Blog(BaseModel):
     title: str
     body: str
-    creator: ShowUser
+
 
 
 
