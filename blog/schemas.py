@@ -33,12 +33,16 @@ class ShowBlog(BaseModel):
         orm_mode = True
 
 
-class Blog(BaseModel):
+class BlogBase(BaseModel):
     title: str
     body: str
 
 
-
+class Blog(BlogBase):
+    title: str
+    body: str
+    class Config:
+        orm_mode = True
 
 
 
