@@ -1,27 +1,28 @@
-from typing import List
+from fastapi import FastAPI, Depends, Response, HTTPException
 
 from fastapi import FastAPI, Depends, Response, HTTPException
-from passlib.context import CryptContext
-
 from sqlalchemy.orm import Session
 from starlette import status
 
 from blog import models
-from blog.database import engine, SessionLocal
+from blog.database import engine, get_db
 from blog.hashing import Hash
 from blog.schemas import Blog, ShowBlog, User, ShowUser
+from routers import blog
 
 app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
 
+app.include_router(blog.router)
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+
+# def get_db():
+#     db = SessionLocal()
+#     try:
+#         yield db
+#     finally:
+#         db.close()
 
 
 @app.post('/blogschema', status_code=status.HTTP_201_CREATED, tags=['blog'])
@@ -33,10 +34,10 @@ def create_blog(request: Blog, db: Session = Depends(get_db)):
     return new_blog
 
 
-@app.get('/blogall', response_model=List[ShowBlog], tags=['blog'])
-def get_all_blog(db: Session = Depends(get_db)):
-    blogs = db.query(models.Blog).all()
-    return blogs
+# @app.get('/blogall', response_model=List[ShowBlog], tags=['blog'])
+# def get_all_blog(db: Session = Depends(get_db)):
+#     blogs = db.query(models.Blog).all()
+#     return blogs
 
 
 @app.get('/blog/{id}', status_code=200, response_model=ShowBlog, tags=['blog'])
