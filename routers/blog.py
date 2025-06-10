@@ -10,16 +10,16 @@ from blog.database import get_db
 
 from blog.schemas import Blog, ShowBlog
 
-router = APIRouter()
+router = APIRouter(tags=['blog'])
 
 
-@router.get('/blogall', response_model=List[ShowBlog], tags=['blog'])
+@router.get('/blogall', response_model=List[ShowBlog])
 def get_all_blog(db: Session = Depends(get_db)):
     blogs = db.query(models.Blog).all()
     return blogs
 
 
-@router.post('/blogschema', status_code=status.HTTP_201_CREATED, tags=['blog'])
+@router.post('/blogschema', status_code=status.HTTP_201_CREATED)
 def create_blog(request: Blog, db: Session = Depends(get_db)):
     new_blog = models.Blog(title=request.title, body=request.body, user_id=1)
     db.add(new_blog)
@@ -28,7 +28,7 @@ def create_blog(request: Blog, db: Session = Depends(get_db)):
     return new_blog
 
 
-@router.get('/blog/{id}', status_code=200, response_model=ShowBlog, tags=['blog'])
+@router.get('/blog/{id}', status_code=200, response_model=ShowBlog)
 def get_blog_by_id(id: int, response: Response, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id).first()
     if not blog:
@@ -38,7 +38,7 @@ def get_blog_by_id(id: int, response: Response, db: Session = Depends(get_db)):
     return blog
 
 
-@router.delete('/blog/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=['blog'])
+@router.delete('/blog/{id}', status_code=status.HTTP_204_NO_CONTENT)
 def destroy(id, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id)
     if not blog.first():
@@ -49,7 +49,7 @@ def destroy(id, db: Session = Depends(get_db)):
         return 'done'
 
 
-@router.put('/blog/{id}', status_code=status.HTTP_202_ACCEPTED, tags=['blog'])
+@router.put('/blog/{id}', status_code=status.HTTP_202_ACCEPTED)
 def update(id, request: Blog, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id)
     if not blog.first():
