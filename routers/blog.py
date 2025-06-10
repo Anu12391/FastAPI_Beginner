@@ -9,53 +9,36 @@ from blog import models
 from blog.database import get_db
 
 from blog.schemas import Blog, ShowBlog
+from repository.blog import get_all, create, delete, update_blog, getBlogById
 
-router = APIRouter(prefix="/blog",tags=['blog'])
+router = APIRouter(prefix="/blog", tags=['blog'])
 
 
 @router.get('/', response_model=List[ShowBlog])
 def get_all_blog(db: Session = Depends(get_db)):
-    blogs = db.query(models.Blog).all()
+    blogs = get_all(db)
     return blogs
 
 
 @router.post('/', status_code=status.HTTP_201_CREATED)
 def create_blog(request: Blog, db: Session = Depends(get_db)):
-    new_blog = models.Blog(title=request.title, body=request.body, user_id=1)
-    db.add(new_blog)
-    db.commit()
-    db.refresh(new_blog)
+    new_blog = create(request, db)
     return new_blog
 
 
 @router.get('/{id}', status_code=200, response_model=ShowBlog)
 def get_blog_by_id(id: int, response: Response, db: Session = Depends(get_db)):
-    blog = db.query(models.Blog).filter(models.Blog.id == id).first()
-    if not blog:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Blog with this {id} is not found")
-        # response.status_code = status.HTTP_404_NOT_FOUND
-        # return {'error_response': f'Blog with this {id} not found'}
+    blog = getBlogById(db, id)
     return blog
 
 
 @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
-def destroy(id, db: Session = Depends(get_db)):
-    blog = db.query(models.Blog).filter(models.Blog.id == id)
-    if not blog.first():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Blog with this {id} is not found")
-    else:
-        blog.delete(synchronize_session=False)
-        db.commit()
-        return 'done'
+def destroy(id:int, db: Session = Depends(get_db)):
+    deleteBlogResp = delete(db, id)
+    return deleteBlogResp
 
 
 @router.put('/{id}', status_code=status.HTTP_202_ACCEPTED)
-def update(id, request: Blog, db: Session = Depends(get_db)):
-    blog = db.query(models.Blog).filter(models.Blog.id == id)
-    if not blog.first():
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Blog with this {id} is not found")
-
-    else:
-        blog.update({'title': request.title, 'body': request.body})
-        db.commit()
-        return 'updated'
+def update(id:int, request: Blog, db: Session = Depends(get_db)):
+    blogUpdatedResp = update_blog(db, id, request)
+    return blogUpdatedResp
