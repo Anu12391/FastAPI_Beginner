@@ -46,3 +46,6 @@ class Blog(BlogBase):
 
 
 
+class Login(BaseModel):
+    username: str
+    password:str

@@ -8,14 +8,16 @@ from blog import models
 from blog.database import engine, get_db
 from blog.hashing import Hash
 from blog.schemas import Blog, ShowBlog, User, ShowUser
-from routers import blog, user
+from routers import blog, user, authentication
 
 app = FastAPI()
 
 models.Base.metadata.create_all(bind=engine)
 
+app.include_router(authentication.router)
 app.include_router(blog.router)
 app.include_router(user.router)
+
 
 # def get_db():
 #     db = SessionLocal()
