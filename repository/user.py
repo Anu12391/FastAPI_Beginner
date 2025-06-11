@@ -1,11 +1,10 @@
-from fastapi import APIRouter
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from starlette import status
+
 from blog import models
-from blog.database import get_db
 from blog.hashing import Hash
-from blog.schemas import User, ShowUser
+from blog.schemas import User
 
 
 def create(request: User, db: Session):

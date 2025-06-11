@@ -1,13 +1,11 @@
 from typing import List
-from fastapi import APIRouter
 
-from fastapi import Depends, Response, HTTPException
+from fastapi import APIRouter
+from fastapi import Depends, Response
 from sqlalchemy.orm import Session
 from starlette import status
 
-from blog import models
 from blog.database import get_db
-
 from blog.schemas import Blog, ShowBlog
 from repository.blog import get_all, create, delete, update_blog, getBlogById
 
