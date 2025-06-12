@@ -1,19 +1,21 @@
 from typing import List
 
 from fastapi import APIRouter
-from fastapi import Depends, Response
+from fastapi import Response
+from fastapi.params import Depends
 from sqlalchemy.orm import Session
 from starlette import status
 
 from blog.database import get_db
-from blog.schemas import Blog, ShowBlog
+from blog.schemas import Blog, ShowBlog, User
 from repository.blog import get_all, create, delete, update_blog, getBlogById
+from routers.oauth2 import get_current_user
 
 router = APIRouter(prefix="/blog", tags=['blog'])
 
 
-@router.get('/', response_model=List[ShowBlog])
-def get_all_blog(db: Session = Depends(get_db)):
+@router.get('/', response_model=List[ShowBlog] )
+def get_all_blog(db: Session = Depends(get_db),current_user:User=Depends(get_current_user)):
     blogs = get_all(db)
     return blogs
 

@@ -1,6 +1,5 @@
 from datetime import timedelta, timezone, datetime
 
-from django.contrib.auth import get_user
 from jose import jwt
 from passlib.exc import InvalidTokenError
 
