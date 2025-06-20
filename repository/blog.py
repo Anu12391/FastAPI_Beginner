@@ -16,6 +16,7 @@ def create(request: Blog, db: Session):
     db.add(new_blog)
     db.commit()
     db.refresh(new_blog)
+    return new_blog
 
 
 def delete(db: Session,id:int):

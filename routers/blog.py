@@ -21,24 +21,24 @@ def get_all_blog(db: Session = Depends(get_db),get_current_user:User=Depends(oau
 
 
 @router.post('/', status_code=status.HTTP_201_CREATED)
-def create_blog(request: Blog, db: Session = Depends(get_db)):
+def create_blog(request: Blog, db: Session = Depends(get_db),get_current_user:User=Depends(oauth2.get_current_user)):
     new_blog = create(request, db)
     return new_blog
 
 
 @router.get('/{id}', status_code=200, response_model=ShowBlog)
-def get_blog_by_id(id: int, response: Response, db: Session = Depends(get_db)):
+def get_blog_by_id(id: int, response: Response, db: Session = Depends(get_db),get_current_user:User=Depends(oauth2.get_current_user)):
     blog = getBlogById(db, id)
     return blog
 
 
 @router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
-def destroy(id:int, db: Session = Depends(get_db)):
+def destroy(id:int, db: Session = Depends(get_db),get_current_user:User=Depends(oauth2.get_current_user)):
     deleteBlogResp = delete(db, id)
     return deleteBlogResp
 
 
 @router.put('/{id}', status_code=status.HTTP_202_ACCEPTED)
-def update(id:int, request: Blog, db: Session = Depends(get_db)):
+def update(id:int, request: Blog, db: Session = Depends(get_db),get_current_user:User=Depends(oauth2.get_current_user)):
     blogUpdatedResp = update_blog(db, id, request)
     return blogUpdatedResp
